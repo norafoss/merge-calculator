@@ -1,0 +1,61 @@
+
+
+# Nora Fossenier
+# 2/13/2023
+# Calculates the amount of lower level components needed to make a number of products
+# Allows users the choice of using only 3 merging, only 5 merging, or optimizing using both
+
+import math
+
+def mergeCalc():
+    # functionality to compare merging options
+    prodLevel = input("What level are you trying to make?")
+    numProd = input("How many do you want?")
+    currLevel = input("What level do you want to calculate?")
+
+    between = prodLevel - currLevel
+    threes = threeMerge(between, numProd)
+    fives = fiveMerge(between, numProd)
+    optimized = comboMerge(between, numProd)
+
+    print("If you only merge by 3:")
+    print("You will need %d items at level %d" % (threes, currLevel))
+    print("\nIf you only merge by 5:")
+    print("You will need %d items at level %d" % (fives, currLevel))
+    print("\nTo optimize, you can use a combination but prioritize merging five, " +
+        "which will require %d items at level %d" % (optimized, currLevel))
+
+
+
+# prioritizes merging by 5, but merges by 3 if there is an odd number of products required
+def comboMerge(between, numProd):
+    for i in range(between):
+        # check how many times you need to merge five
+        halved = math.floor(numProd / 2)
+        # find number of components needed for solely merging five
+        tempNum = halved * 5
+        # check if there is a leftover product -> if so add components to merge three
+        if (halved * 2 != numProd):
+            tempNum += 3
+        numProd = tempNum
+        # print number of components needed for each level
+        # print("You will need %d level %d items." % (numProd, prodLevel - i - 1))
+    return numProd
+
+# only considers merging by 3
+def threeMerge(between, numProd):
+    # multiply by 3 for each level
+    numCurr = numProd * (3**between)
+    print(numCurr)
+    return numCurr
+
+# only considers merging by 5 -> this will generate 'excess' products
+def fiveMerge(between, numProd):
+    for i in range(between):
+        if (numProd % 2 == 1):
+            numProd += 1
+            # print("You will get 1 extra level %d item!" % (prodLevel - i))
+        numComp = (numProd / 2) * 5
+        numProd = numComp
+        # print("You will need %d level %d items." % (numComp, prodLevel - i - 1))
+    return numProd
